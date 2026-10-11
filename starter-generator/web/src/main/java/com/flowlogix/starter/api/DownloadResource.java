@@ -18,6 +18,7 @@ package com.flowlogix.starter.api;
 import com.flowlogix.starter.ArchetypeGenerator;
 import com.flowlogix.starter.ArchetypeGenerator.Parameter;
 import com.flowlogix.starter.ArchetypeGenerator.ReturnValue;
+import com.flowlogix.starter.common.ArtifactId;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -30,6 +31,22 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
 import lombok.extern.slf4j.Slf4j;
+import static com.flowlogix.starter.common.StarterParameters.ARCHETYPE_VERSION;
+import static com.flowlogix.starter.common.StarterParameters.ARTIFACT;
+import static com.flowlogix.starter.common.StarterParameters.BASE_TYPE;
+import static com.flowlogix.starter.common.StarterParameters.GROUP;
+import static com.flowlogix.starter.common.StarterParameters.PACKAGE;
+import static com.flowlogix.starter.common.StarterParameters.PACKAGING_TYPE;
+import static com.flowlogix.starter.common.StarterParameters.PROJECT_NAME;
+import static com.flowlogix.starter.common.StarterParameters.USE_AGENTIC_AI;
+import static com.flowlogix.starter.common.StarterParameters.USE_ARQUILLIAN_GRAPHENE;
+import static com.flowlogix.starter.common.StarterParameters.USE_CODE_COVERAGE;
+import static com.flowlogix.starter.common.StarterParameters.USE_LAZY_MODEL;
+import static com.flowlogix.starter.common.StarterParameters.USE_MAVEN_CACHE;
+import static com.flowlogix.starter.common.StarterParameters.USE_OMNIFACES;
+import static com.flowlogix.starter.common.StarterParameters.USE_PRIMEFACES;
+import static com.flowlogix.starter.common.StarterParameters.USE_SHIRO;
+import static com.flowlogix.starter.common.StarterParameters.VERSION;
 
 @Slf4j
 @Path("/")
@@ -40,25 +57,26 @@ public class DownloadResource {
     @GET
     @Produces({MediaType.APPLICATION_OCTET_STREAM, MediaType.TEXT_PLAIN})
     @SuppressWarnings("checkstyle:ParameterNumber")
-    public Response downloadFile(@MatrixParam("group") @DefaultValue("com.example") String groupId,
-                                 @Pattern(regexp = "^[a-zA-Z0-9_-]+$",
+    public Response downloadFile(@MatrixParam(GROUP) @DefaultValue("com.example") String groupId,
+                                 @Pattern(regexp = ArtifactId.PATTERN,
                                           message = "Artifact ID can only contain letters, numbers, underscores, and hyphens")
-                                 @Size(min = 1, max = 100, message = "Artifact ID must be between 1 and 100 characters")
-                                 @MatrixParam("artifact") @DefaultValue("starter") String artifactId,
-                                 @MatrixParam("projectName") String projectName,
-                                 @MatrixParam("package") String packageName,
-                                 @MatrixParam("baseType") String baseType,
-                                 @MatrixParam("packagingType") String packagingType,
-                                 @MatrixParam("version") String version,
-                                 @MatrixParam("archetypeVersion") String archetypeVersion,
-                                 @MatrixParam("useShiro") @DefaultValue("false") boolean useShiro,
-                                 @MatrixParam("useAgenticAI") @DefaultValue("false") boolean useAgenticAI,
-                                 @MatrixParam("useOmniFaces") @DefaultValue("false") boolean useOmniFaces,
-                                 @MatrixParam("usePrimeFaces") @DefaultValue("false") boolean usePrimeFaces,
-                                 @MatrixParam("useLazyModel") @DefaultValue("false") boolean useLazyModel,
-                                 @MatrixParam("useMavenCache") @DefaultValue("false") boolean useMavenCache,
-                                 @MatrixParam("useCodeCoverage") @DefaultValue("false") boolean useCodeCoverage,
-                                 @MatrixParam("useArquillianGraphene") @DefaultValue("false") boolean useArquillianGraphene) {
+                                 @Size(min = 1, max = ArtifactId.MAX_LENGTH,
+                                       message = "Artifact ID must be between 1 and " + ArtifactId.MAX_LENGTH + " characters")
+                                 @MatrixParam(ARTIFACT) @DefaultValue("starter") String artifactId,
+                                 @MatrixParam(PROJECT_NAME) String projectName,
+                                 @MatrixParam(PACKAGE) String packageName,
+                                 @MatrixParam(BASE_TYPE) String baseType,
+                                 @MatrixParam(PACKAGING_TYPE) String packagingType,
+                                 @MatrixParam(VERSION) String version,
+                                 @MatrixParam(ARCHETYPE_VERSION) String archetypeVersion,
+                                 @MatrixParam(USE_SHIRO) @DefaultValue("false") boolean useShiro,
+                                 @MatrixParam(USE_AGENTIC_AI) @DefaultValue("false") boolean useAgenticAI,
+                                 @MatrixParam(USE_OMNIFACES) @DefaultValue("false") boolean useOmniFaces,
+                                 @MatrixParam(USE_PRIMEFACES) @DefaultValue("false") boolean usePrimeFaces,
+                                 @MatrixParam(USE_LAZY_MODEL) @DefaultValue("false") boolean useLazyModel,
+                                 @MatrixParam(USE_MAVEN_CACHE) @DefaultValue("false") boolean useMavenCache,
+                                 @MatrixParam(USE_CODE_COVERAGE) @DefaultValue("false") boolean useCodeCoverage,
+                                 @MatrixParam(USE_ARQUILLIAN_GRAPHENE) @DefaultValue("false") boolean useArquillianGraphene) {
         ReturnValue result = generator.generateArchetype(new Parameter[] {
                 new Parameter("groupId", groupId),
                 new Parameter("artifactId", artifactId),
