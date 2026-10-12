@@ -13,15 +13,15 @@
     <parent>
         <groupId>com.flowlogix</groupId>
         <artifactId>payara-pom</artifactId>
-        <version>145</version>
+        <version>146</version>
     </parent>
 
     <properties>
         <checkstyle.suppressionsLocation>${maven.multiModuleProjectDirectory}/src/checkstyle/suppressions.xml</checkstyle.suppressionsLocation>
 
-        <flowlogix.bom.version>50</flowlogix.bom.version>
-        <flowlogix.version>11.7</flowlogix.version>
-        <depchain.version>131</depchain.version>
+        <flowlogix.bom.version>51</flowlogix.bom.version>
+        <flowlogix.version>11.7.1</flowlogix.version>
+        <depchain.version>133</depchain.version>
         <shiro.version>3.0.1</shiro.version>
         <jandex.skip>false</jandex.skip>
 
@@ -120,7 +120,7 @@
             <dependency>
                 <groupId>io.opentelemetry</groupId>
                 <artifactId>opentelemetry-api</artifactId>
-                <version>1.66.0</version>
+                <version>1.67.0</version>
             </dependency>
             <dependency>
                 <groupId>net.java.dev.jna</groupId>
