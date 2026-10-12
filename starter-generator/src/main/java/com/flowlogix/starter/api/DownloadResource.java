@@ -92,9 +92,9 @@ public class DownloadResource {
 
     private static Map<String, String> allowedParameters() {
         return Stream.concat(archetypePropertyNames().stream().map(name -> Map.entry(name, name)), Stream.of(
-                                Map.entry("group", "groupId"),
-                                Map.entry("artifact", "artifactId"),
-                                Map.entry("package", "package"),
+                        Map.entry("group", "groupId"),
+                        Map.entry("artifact", "artifactId"),
+                        Map.entry("package", "package"),
                         Map.entry("archetypeVersion", "archetypeVersion")))
                 .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue, (first, var) -> first));
     }
