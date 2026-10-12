@@ -20,6 +20,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <!-- Source of the allowlist of archetype property names, see DownloadResource -->
+            <groupId>com.flowlogix.archetypes</groupId>
+            <artifactId>starter</artifactId>
+            <version>154</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>1.28.0</version>
