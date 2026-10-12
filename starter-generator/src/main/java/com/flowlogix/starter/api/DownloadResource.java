@@ -59,7 +59,6 @@ public class DownloadResource {
 
     @GET
     @Produces({MediaType.APPLICATION_OCTET_STREAM, MediaType.TEXT_PLAIN})
-    @SuppressWarnings("checkstyle:ParameterNumber")
     public Response downloadFile(@MatrixParam("artifact") @DefaultValue("starter")
                                  @Pattern(regexp = "^[a-zA-Z0-9_-]+$",
                                           message = "Artifact ID can only contain letters, numbers, underscores, and hyphens")
