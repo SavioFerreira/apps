@@ -66,9 +66,9 @@ public class DownloadResource {
     @Produces({MediaType.APPLICATION_OCTET_STREAM, MediaType.TEXT_PLAIN})
     public Response downloadFile(@MatrixParam(ARTIFACT) @DefaultValue("starter")
                                  @Pattern(regexp = ArtifactId.PATTERN,
-                                         message = "Artifact ID can only contain letters, numbers, underscores, and hyphens")
+                                          message = "Artifact ID can only contain letters, numbers, underscores, and hyphens")
                                  @Size(min = 1, max = ArtifactId.MAX_LENGTH,
-                                         message = "Artifact ID must be between 1 and " + ArtifactId.MAX_LENGTH + " characters")
+                                       message = "Artifact ID must be between 1 and " + ArtifactId.MAX_LENGTH + " characters")
                                  String artifactId) {
         ReturnValue result = generator.generateArchetype(parameters(artifactId));
 
