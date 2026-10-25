@@ -14,8 +14,6 @@
 
     <properties>
         <main.class>com.flowlogix.starter.cli.StarterCli</main.class>
-        <jandex.skip>true</jandex.skip>
-        <server.start.skip>true</server.start.skip>
     </properties>
 
     <dependencies>

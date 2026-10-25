@@ -18,12 +18,11 @@ package com.flowlogix.starter.api;
 import com.flowlogix.starter.ArchetypeGenerator;
 import com.flowlogix.starter.ArchetypeGenerator.Parameter;
 import com.flowlogix.starter.ArchetypeGenerator.ReturnValue;
+import com.flowlogix.starter.common.ArchetypeMetadata;
 import com.flowlogix.starter.common.ArtifactId;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.Pattern;
@@ -39,12 +38,7 @@ import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
 import jakarta.ws.rs.core.UriInfo;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import static com.flowlogix.starter.common.StarterParameters.ARCHETYPE_VERSION;
 import static com.flowlogix.starter.common.StarterParameters.ARTIFACT;
 import static com.flowlogix.starter.common.StarterParameters.GROUP;
@@ -53,7 +47,6 @@ import static com.flowlogix.starter.common.StarterParameters.PACKAGE;
 @Slf4j
 @Path("/")
 public class DownloadResource {
-    private static final String ARCHETYPE_METADATA = "META-INF/maven/archetype-metadata.xml";
     // Allowlist of matrix parameters passed to the generator, mapped to generator parameter names
     private static final Map<String, String> ALLOWED_PARAMETERS = allowedParameters();
 
@@ -96,23 +89,13 @@ public class DownloadResource {
     }
 
     private static Map<String, String> allowedParameters() {
-        return Stream.concat(archetypePropertyNames().stream().map(name -> Map.entry(name, name)), Stream.of(
+        // Properties declared by the archetype are the only safe pass-through names
+        return Stream.concat(ArchetypeMetadata.properties().stream()
+                        .map(property -> Map.entry(property.key(), property.key())), Stream.of(
                         Map.entry(GROUP, "groupId"),
                         Map.entry(ARTIFACT, "artifactId"),
                         Map.entry(PACKAGE, "package"),
                         Map.entry(ARCHETYPE_VERSION, "archetypeVersion")))
                 .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue, (first, var) -> first));
-    }
-
-    // Properties declared by the archetype are the only safe pass-through names
-    @SneakyThrows({IOException.class, ParserConfigurationException.class, SAXException.class})
-    private static List<String> archetypePropertyNames() {
-        var factory = DocumentBuilderFactory.newInstance();
-        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-        try (var in = DownloadResource.class.getClassLoader().getResourceAsStream(ARCHETYPE_METADATA)) {
-            var nodes = factory.newDocumentBuilder().parse(in).getElementsByTagName("requiredProperty");
-            return IntStream.range(0, nodes.getLength()).mapToObj(index -> ((Element) nodes.item(index))
-                    .getAttribute("key")).toList();
-        }
     }
 }

@@ -12,8 +12,12 @@
     <artifactId>starter-common</artifactId>
     <name>Starter Common</name>
 
-    <properties>
-        <jandex.skip>true</jandex.skip>
-        <server.start.skip>true</server.start.skip>
-    </properties>
+    <dependencies>
+        <dependency>
+            <!-- Source of the archetype's properties, see ArchetypeMetadata -->
+            <groupId>com.flowlogix.archetypes</groupId>
+            <artifactId>starter</artifactId>
+            <version>156</version>
+        </dependency>
+    </dependencies>
 </project>

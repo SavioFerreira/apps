@@ -5,8 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.flowlogix</groupId>
-        <artifactId>starter-generator-parent</artifactId>
+        <artifactId>apps-root</artifactId>
         <version>1.x-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>starter-generator</artifactId>
@@ -18,12 +19,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>starter-common</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <!-- Source of the allowlist of archetype property names, see DownloadResource -->
-            <groupId>com.flowlogix.archetypes</groupId>
-            <artifactId>starter</artifactId>
-            <version>156</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
