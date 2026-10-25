@@ -16,7 +16,6 @@
 package com.flowlogix.starter.ui;
 
 import com.flowlogix.starter.ArchetypeGenerator;
-import com.flowlogix.starter.common.BaseType;
 import com.flowlogix.starter.common.DownloadRequest;
 import com.flowlogix.util.ShrinkWrapManipulator;
 import jakarta.enterprise.context.SessionScoped;
@@ -50,10 +49,14 @@ import static com.flowlogix.starter.common.StarterParameters.GROUP;
 @Getter @Setter
 public class ArchetypeCustomizer implements Serializable {
     @Serial
-    private static final long serialVersionUID = 4L;
+    private static final long serialVersionUID = 3L;
 
     @Inject
     ArchetypeGenerator generator;
+
+    private enum BaseType {
+        BASE, INFRA, PAYARA, GLASSFISH
+    }
 
     @Pattern(regexp = "^(?!.*(?:\\.{2}|/)).*$", message = "Invalid path: Path traversal attempt detected")
     private String artifact = "";

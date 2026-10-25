@@ -15,6 +15,8 @@
  */
 package com.flowlogix.starter.common;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -23,12 +25,11 @@ import java.util.stream.Collectors;
 /**
  * A request to the generator's download endpoint, which takes its parameters as matrix parameters of the path.
  */
-public final class DownloadRequest {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings("HideUtilityClassConstructor")
+public class DownloadRequest {
     /** Media type of the project archive, for the request to accept. */
     public static final String ARCHIVE_TYPE = "application/octet-stream";
-
-    private DownloadRequest() {
-    }
 
     /**
      * Builds the request URL. Blank parameters are left out, so the generator applies its own defaults to them.

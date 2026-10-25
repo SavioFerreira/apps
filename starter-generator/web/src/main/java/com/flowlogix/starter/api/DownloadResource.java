@@ -19,7 +19,6 @@ import com.flowlogix.starter.ArchetypeGenerator;
 import com.flowlogix.starter.ArchetypeGenerator.Parameter;
 import com.flowlogix.starter.ArchetypeGenerator.ReturnValue;
 import com.flowlogix.starter.common.ArchetypeMetadata;
-import com.flowlogix.starter.common.ArtifactId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,10 +64,9 @@ public class DownloadResource {
     @GET
     @Produces({MediaType.APPLICATION_OCTET_STREAM, MediaType.TEXT_PLAIN})
     public Response downloadFile(@MatrixParam(ARTIFACT) @DefaultValue("starter")
-                                 @Pattern(regexp = ArtifactId.PATTERN,
+                                 @Pattern(regexp = "^[a-zA-Z0-9_-]+$",
                                           message = "Artifact ID can only contain letters, numbers, underscores, and hyphens")
-                                 @Size(min = 1, max = ArtifactId.MAX_LENGTH,
-                                       message = "Artifact ID must be between 1 and " + ArtifactId.MAX_LENGTH + " characters")
+                                 @Size(min = 1, max = 100, message = "Artifact ID must be between 1 and 100 characters")
                                  String artifactId) {
         ReturnValue result = generator.generateArchetype(parameters(artifactId));
 

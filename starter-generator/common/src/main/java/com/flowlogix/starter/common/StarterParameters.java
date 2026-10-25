@@ -15,28 +15,17 @@
  */
 package com.flowlogix.starter.common;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
- * Names of the parameters the generator's download endpoint takes.
+ * Names the generator's download endpoint gives to parameters that are not properties of the archetype.
  */
-@SuppressWarnings("checkstyle:JavadocVariable")
-public final class StarterParameters {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings({"checkstyle:JavadocVariable", "HideUtilityClassConstructor"})
+public class StarterParameters {
     public static final String GROUP = "group";
     public static final String ARTIFACT = "artifact";
-    public static final String PROJECT_NAME = "projectName";
     public static final String PACKAGE = "package";
-    public static final String BASE_TYPE = "baseType";
-    public static final String PACKAGING_TYPE = "packagingType";
-    public static final String VERSION = "version";
     public static final String ARCHETYPE_VERSION = "archetypeVersion";
-    public static final String USE_SHIRO = "useShiro";
-    public static final String USE_AGENTIC_AI = "useAgenticAI";
-    public static final String USE_OMNIFACES = "useOmniFaces";
-    public static final String USE_PRIMEFACES = "usePrimeFaces";
-    public static final String USE_LAZY_MODEL = "useLazyModel";
-    public static final String USE_MAVEN_CACHE = "useMavenCache";
-    public static final String USE_CODE_COVERAGE = "useCodeCoverage";
-    public static final String USE_ARQUILLIAN_GRAPHENE = "useArquillianGraphene";
-
-    private StarterParameters() {
-    }
 }
