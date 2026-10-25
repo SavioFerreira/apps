@@ -16,6 +16,7 @@
 package com.flowlogix.starter.cli;
 
 import com.sun.net.httpserver.HttpServer;
+import lombok.Getter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,7 +29,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * Stands in for the generator's download endpoint, so the CLI tests need no server.
+ */
 class GeneratorStub implements AutoCloseable {
+    @Getter
     private final List<String> requests = new CopyOnWriteArrayList<>();
     private final HttpServer server;
 
@@ -47,10 +52,6 @@ class GeneratorStub implements AutoCloseable {
 
     URI url() {
         return URI.create("http://localhost:%d/sg/download/".formatted(server.getAddress().getPort()));
-    }
-
-    List<String> requests() {
-        return requests;
     }
 
     @Override
