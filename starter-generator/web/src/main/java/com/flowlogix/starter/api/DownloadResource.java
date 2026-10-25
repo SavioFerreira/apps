@@ -20,11 +20,15 @@ import com.flowlogix.starter.ArchetypeGenerator.Parameter;
 import com.flowlogix.starter.ArchetypeGenerator.ReturnValue;
 import com.flowlogix.starter.common.ArchetypeMetadata;
 import com.flowlogix.starter.common.ArtifactId;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import jakarta.ws.rs.DefaultValue;
@@ -39,6 +43,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
 import jakarta.ws.rs.core.UriInfo;
 import lombok.extern.slf4j.Slf4j;
+import javax.lang.model.SourceVersion;
 import static com.flowlogix.starter.common.StarterParameters.ARCHETYPE_VERSION;
 import static com.flowlogix.starter.common.StarterParameters.ARTIFACT;
 import static com.flowlogix.starter.common.StarterParameters.GROUP;
@@ -49,6 +54,8 @@ import static com.flowlogix.starter.common.StarterParameters.PACKAGE;
 public class DownloadResource {
     // Allowlist of matrix parameters passed to the generator, mapped to generator parameter names
     private static final Map<String, String> ALLOWED_PARAMETERS = allowedParameters();
+    // Values the archetype would accept but that would produce a broken project
+    private static final Map<String, Rule> RULES = rules();
 
     @Inject
     ArchetypeGenerator generator;
@@ -82,10 +89,18 @@ public class DownloadResource {
         Map<String, List<String>> matrix = segments.isEmpty() ? Map.of() : segments.getLast().getMatrixParameters();
         return matrix.entrySet().stream()
                 .filter(entry -> ALLOWED_PARAMETERS.containsKey(entry.getKey()))
-                .map(entry -> new Parameter(ALLOWED_PARAMETERS.get(entry.getKey()),
-                        // repeated matrix parameters must not bypass validation
-                        ARTIFACT.equals(entry.getKey()) ? artifactId : entry.getValue().getLast()))
+                // repeated matrix parameters must not bypass validation
+                .map(entry -> parameter(entry.getKey(), ARTIFACT.equals(entry.getKey())
+                        ? artifactId : entry.getValue().getLast()))
                 .toArray(Parameter[]::new);
+    }
+
+    private static Parameter parameter(String name, String value) {
+        Rule rule = RULES.get(name);
+        if (rule != null && !value.isBlank() && !rule.isValid().test(value)) {
+            throw new ConstraintViolationException("Invalid %s '%s': %s".formatted(name, value, rule.expected()), Set.of());
+        }
+        return new Parameter(ALLOWED_PARAMETERS.get(name), value);
     }
 
     private static Map<String, String> allowedParameters() {
@@ -98,4 +113,16 @@ public class DownloadResource {
                         Map.entry(ARCHETYPE_VERSION, "archetypeVersion")))
                 .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue, (first, var) -> first));
     }
+
+    private static Map<String, Rule> rules() {
+        var rules = new HashMap<String, Rule>();
+        ArchetypeMetadata.properties().stream().filter(property -> property.validationRegex() != null)
+                .forEach(property -> rules.put(property.key(), new Rule(value -> value.matches(property.validationRegex()),
+                        "must match " + property.validationRegex())));
+        rules.put(GROUP, new Rule(value -> value.matches("[A-Za-z0-9_.-]+"), "use only letters, digits, '.', '-' and '_'"));
+        rules.put(PACKAGE, new Rule(SourceVersion::isName, "not a valid Java package name"));
+        return Map.copyOf(rules);
+    }
+
+    private record Rule(Predicate<String> isValid, String expected) { }
 }
