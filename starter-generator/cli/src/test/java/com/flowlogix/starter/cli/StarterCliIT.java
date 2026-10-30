@@ -33,7 +33,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @QuarkusMainTest
-class StarterCliTest {
+class StarterCliIT {
     private static final String ARCHIVE_TYPE = "application/octet-stream";
 
     private static LaunchResult generate(QuarkusMainLauncher launcher, URI generatorUrl, Path dir, String... options) {
